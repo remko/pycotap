@@ -1,19 +1,19 @@
-# [pycotap: Minimalistic Python TAP Test Runner](https://el-tramo.be/pycotap)
+# [pycotap: Tiny Python TAP Test Runner](https://el-tramo.be/pycotap)
 
-A Python `unittest` test runner that outputs [TAP](http://testanything.org) results
-to stdout (similar to what [`tape`](https://www.npmjs.com/package/tape) does for
-JavaScript).
+`pycotap` is a simple Python test runner for ``unittest`` that outputs 
+[Test Anything Protocol](http://testanything.org) results to standard output 
+(similar to what [`tape`](https://www.npmjs.com/package/tape) does for JavaScript).
 
-Contrary to other TAP runners for Python, pycotap ...
+Contrary to other TAP runners for Python, `pycotap` ...
 
-- ... does not output to a separate 
-  file to disk but straight to standard out, allowing you to pipe it directly to TAP
-  pretty printers and processors (such as the ones listed on
-  the [`tape` page](https://www.npmjs.com/package/tape#pretty-reporters)), avoiding
-  the need to add other test runners to your test code. Only valid TAP is printed
-  on standard output (everything else goes to standard error), and the TAP results
-  are printed as they come in, meaning the consumers don't get confused and can 
-  directly display results.
+- ... prints TAP (and *only* TAP) to standard output instead of to a separate file,
+  allowing you to pipe it directly to TAP pretty printers and processors 
+	(such as the ones listed on
+  the [`tape` page](https://www.npmjs.com/package/tape#pretty-reporters)). By
+	piping it to other consumers, you can avoid the need to add 
+  specific test runners to your test code. Since the TAP results
+  are printed as they come in, the consumers can directly display results while 
+	the tests are run.
 - ... only contains a TAP reporter, so no parsers, no frameworks, no dependencies, ...
 
 

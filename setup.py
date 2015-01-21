@@ -1,22 +1,38 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import os
 from setuptools import setup, find_packages
-
-def read(fname):
-  return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
   name = "pycotap",
   version = "0.1.0",
   packages = find_packages(),
-  # long_description = read('README.md'),
 
   # Metadata
   author = "Remko Tronçon",
   author_email = "dev@el-tramo.be",
-  description = """A test runner that outputs TAP results to stdandard output.""",
+  description = """A tiny test runner that outputs TAP results to standard output.""",
+  long_description = """
+`pycotap` is a simple Python test runner for ``unittest`` that outputs 
+`Test Anything Protocol <http://testanything.org>`_ results to standard output 
+(similar to what `tape <https://www.npmjs.com/package/tape>`_ does for JavaScript).
+
+Contrary to other TAP runners for Python, ``pycotap`` ...
+
+- ... prints TAP (and *only* TAP) to standard output instead of to a separate file,
+  allowing you to pipe it directly to TAP pretty printers and processors 
+  (such as the ones listed on
+  `the tape page <https://www.npmjs.com/package/tape#pretty-reporters>`_). By
+  piping it to other consumers, you can avoid the need to add 
+  specific test runners to your test code. Since the TAP results
+  are printed as they come in, the consumers can directly display results while 
+  the tests are run.
+
+- ... only contains a TAP reporter, so no parsers, no frameworks, no dependencies, ...
+
+Documentation and examples can be found on `the pycotap page 
+<https://el-tramo.be/pycotap>`_.
+""",
   license = "MIT",
   keywords = "tap unittest testing",
   url = "https://el-tramo.be/pycotap",
