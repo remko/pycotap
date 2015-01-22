@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -6,13 +8,17 @@ from pycotap import TAPTestRunner
 
 class MyTests(unittest.TestCase):
   def test_that_it_passes(self):
+    print "First line of output"
+    print "Second line of output"
     self.assertEqual(0, 0)
 
-  @unittest.skip("not finished yet")
+  @unittest.skip("Not finished yet")
   def test_that_it_skips(self): 
     raise Exception("Does not happen")
 
   def test_that_it_fails(self):
+    print "First line of output"
+    print "Second line of output"
     self.assertEqual(1, 0)
 
 if __name__ == '__main__':

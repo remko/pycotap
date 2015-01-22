@@ -8,12 +8,12 @@ Contrary to other TAP runners for Python, `pycotap` ...
 
 - ... prints TAP (and *only* TAP) to standard output instead of to a separate file,
   allowing you to pipe it directly to TAP pretty printers and processors 
-	(such as the ones listed on
+  (such as the ones listed on
   the [`tape` page](https://www.npmjs.com/package/tape#pretty-reporters)). By
-	piping it to other consumers, you can avoid the need to add 
+  piping it to other consumers, you can avoid the need to add 
   specific test runners to your test code. Since the TAP results
   are printed as they come in, the consumers can directly display results while 
-	the tests are run.
+  the tests are run.
 - ... only contains a TAP reporter, so no parsers, no frameworks, no dependencies, ...
 
 
@@ -86,6 +86,13 @@ Alternatively, you can pipe the test to any TAP pretty printer, such as
 
 ## API
 
-### `TAPTestRunner()`
+### `TAPTestRunner([log_mode])`
 
-No constructor arguments.
+- `log_mode` (Optional): What to do with output resulting from the tests. Possible values:
+
+    - `LogMode.LogToError`: Log all output to standard error. This means no output 
+      information will end up in the TAP stream, and so will not be processed by any 
+      processors.
+    - `LogMode.LogToDiagnostics` (Default): Put all output in a diagnostics message 
+      after the test result. This means all output will end up in the TAP stream. How 
+      this is displayed depends on the processor.
