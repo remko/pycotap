@@ -51,7 +51,7 @@ class TAPTestResult(unittest.TestResult):
 
   def addSkip(self, test, reason):
     super(TAPTestResult, self).addSkip(test, reason)
-    self.ok(test, "Skipped: " + reason)
+    self.ok(test, "SKIP " + reason)
 
   def addExpectedFailure(self, test, err):
     super(TAPTestResult, self).addExpectedFailure(test, err)
