@@ -18,6 +18,12 @@ class TAPTestRunnerTest(unittest.TestCase):
     suite = unittest.TestLoader().loadTestsFromTestCase(test_class)
     return TAPTestRunner(output_stream = self.output_stream, error_stream = self.error_stream, **kwargs).run(suite)
 
+  def process_output(self, output):
+    return re.sub(
+        r"File \".*\"",
+        "File \"test.py\"",
+        re.sub(r"line \d+", "line X", output))
+
   def test_all_test_outcomes(self):
     class Test(unittest.TestCase) :
       def test_passing(self):
@@ -29,11 +35,11 @@ class TAPTestRunnerTest(unittest.TestCase):
         self.assertEqual(1, 2)
 
     self.run_test(Test)
-    self.assertEqual(re.sub(r"line \d+", "line X", self.output_stream.getvalue()), (
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
       "TAP version 13\n"
       "not ok 1 __main__.Test.test_failing\n"
       "# Traceback (most recent call last):\n"
-      "#   File \"./test/test.py\", line X, in test_failing\n"
+      "#   File \"test.py\", line X, in test_failing\n"
       "#     self.assertEqual(1, 2)\n"
       "# AssertionError: 1 != 2\n"
       "ok 2 __main__.Test.test_passing\n"
@@ -54,12 +60,12 @@ class TAPTestRunnerTest(unittest.TestCase):
         print "Bar"
 
     self.run_test(Test)
-    self.assertEqual(re.sub(r"line \d+", "line X", self.output_stream.getvalue()), (
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
       "TAP version 13\n"
       "not ok 1 __main__.Test.test_failing\n"
       "# Foo\n"
       "# Traceback (most recent call last):\n"
-      "#   File \"./test/test.py\", line X, in test_failing\n"
+      "#   File \"test.py\", line X, in test_failing\n"
       "#     self.assertEqual(1, 2)\n"
       "# AssertionError: 1 != 2\n"
       "ok 2 __main__.Test.test_passing\n"
@@ -88,10 +94,10 @@ class TAPTestRunnerTest(unittest.TestCase):
       "ok 2 __main__.Test.test_passing\n"
       "1..2\n"
     ))
-    self.assertEqual(re.sub(r"line \d+", "line X", self.error_stream.getvalue()), (
+    self.assertEqual(self.process_output(self.error_stream.getvalue()), (
       "Foo\n"
       "Traceback (most recent call last):\n"
-      "  File \"./test/test.py\", line X, in test_failing\n"
+      "  File \"test.py\", line X, in test_failing\n"
       "    self.assertEqual(1, 2)\n"
       "AssertionError: 1 != 2\n"
       "\n"
@@ -113,11 +119,11 @@ class TAPTestRunnerTest(unittest.TestCase):
 
     self.output_stream = self.error_stream
     self.run_test(Test, log_mode = LogMode.LogToError)
-    self.assertEqual(re.sub(r"line \d+", "line X", self.output_stream.getvalue()), (
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
       "TAP version 13\n"
       "Foo\n"
       "Traceback (most recent call last):\n"
-      "  File \"./test/test.py\", line X, in test_failing\n"
+      "  File \"test.py\", line X, in test_failing\n"
       "    self.assertEqual(1, 2)\n"
       "AssertionError: 1 != 2\n"
       "\n"
