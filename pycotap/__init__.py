@@ -5,6 +5,7 @@
 # Released under the MIT license
 # See COPYING for details
 
+
 import unittest
 import sys
 import StringIO
@@ -15,25 +16,26 @@ class LogMode(object) :
 
 
 class TAPTestResult(unittest.TestResult):
-  def __init__(self, stream, log_mode):
-    super(TAPTestResult, self).__init__(self, stream)
-    self.stream = stream
+  def __init__(self, output_stream, error_stream, log_mode):
+    super(TAPTestResult, self).__init__(self, output_stream)
+    self.output_stream = output_stream
+    self.error_stream = error_stream
     self.orig_stdout = None
     self.orig_stderr = None
     self.output = None
     self.log_mode = log_mode
-    self.stream.write("TAP version 13\n")
+    self.output_stream.write("TAP version 13\n")
 
   def print_raw(self, text):
-    self.stream.write(text)
-    self.stream.flush()
+    self.output_stream.write(text)
+    self.output_stream.flush()
 
   def print_result(self, result, test, directive = None):
-    self.stream.write("%s %d %s" % (result, self.testsRun, test.id()))
+    self.output_stream.write("%s %d %s" % (result, self.testsRun, test.id()))
     if directive:
-      self.stream.write(" # " + directive)
-    self.stream.write("\n")
-    self.stream.flush()
+      self.output_stream.write(" # " + directive)
+    self.output_stream.write("\n")
+    self.output_stream.flush()
 
   def ok(self, test, directive = None):
     self.print_result("ok", test, directive)
@@ -47,7 +49,7 @@ class TAPTestResult(unittest.TestResult):
     if self.log_mode == LogMode.LogToDiagnostics:
       sys.stdout = sys.stderr = self.output = StringIO.StringIO()
     else:
-      sys.stdout = sys.stderr
+      sys.stdout = sys.stderr = self.error_stream
     super(TAPTestResult, self).startTest(test)
 
   def stopTest(self, test):
@@ -84,20 +86,18 @@ class TAPTestResult(unittest.TestResult):
     self.not_ok(test)
 
   def printErrors(self):
-    print "1..%d" % self.testsRun
+    self.print_raw("1..%d\n" % self.testsRun)
+
 
 class TAPTestRunner(object):
-  def __init__(self, log_mode = LogMode.LogToDiagnostics):
-    self.stream = sys.stdout
+  def __init__(self, log_mode = LogMode.LogToDiagnostics, output_stream = sys.stdout, error_stream = sys.stderr):
+    self.output_stream = output_stream
+    self.error_stream = error_stream
     self.log_mode = log_mode
 
   def run(self, test):
-    result = TAPTestResult(self.stream, self.log_mode)
-    try:
-      test(result)
-    finally:
-      pass
-
+    result = TAPTestResult(self.output_stream, self.error_stream, self.log_mode)
+    test(result)
     result.printErrors()
 
     return result
