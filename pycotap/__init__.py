@@ -67,10 +67,12 @@ class TAPTestResult(unittest.TestResult):
 
   def addError(self, test, err):
     super(TAPTestResult, self).addError(test, err)
+    sys.stderr.write(self.errors[-1][1] + "\n")
     self.not_ok(test)
 
   def addFailure(self, test, err):
     super(TAPTestResult, self).addFailure(test, err)
+    sys.stderr.write(self.failures[-1][1] + "\n")
     self.not_ok(test)
 
   def addSkip(self, test, reason):
@@ -79,6 +81,7 @@ class TAPTestResult(unittest.TestResult):
 
   def addExpectedFailure(self, test, err):
     super(TAPTestResult, self).addExpectedFailure(test, err)
+    sys.stderr.write(self.expectedFailures[-1][1] + "\n")
     self.ok(test)
 
   def addUnexpectedSuccess(self, test):
