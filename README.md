@@ -96,3 +96,4 @@ Alternatively, you can pipe the test to any TAP pretty printer, such as
     - `LogMode.LogToDiagnostics` (Default): Put all output in a diagnostics message 
       after the test result. This means all output will end up in the TAP stream. How 
       this is displayed depends on the processor.
+    - `LogMode.LogToYAML`: Log all output to a YAML block.

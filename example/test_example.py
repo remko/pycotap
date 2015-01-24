@@ -5,7 +5,7 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import unittest
-from pycotap import TAPTestRunner
+from pycotap import TAPTestRunner, LogMode
 
 class MyTests(unittest.TestCase):
   def test_that_it_passes(self):
@@ -24,4 +24,4 @@ class MyTests(unittest.TestCase):
 
 if __name__ == '__main__':
   suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
-  TAPTestRunner().run(suite)
+  TAPTestRunner(log_mode = LogMode.LogToDiagnostics).run(suite)
