@@ -14,8 +14,7 @@ setup(
   description = """A tiny test runner that outputs TAP results to standard output.""",
   long_description = """
 `pycotap` is a simple Python test runner for ``unittest`` that outputs 
-`Test Anything Protocol <http://testanything.org>`_ results to standard output 
-(similar to what `tape <https://www.npmjs.com/package/tape>`_ does for JavaScript).
+`Test Anything Protocol <http://testanything.org>`_ results directly to standard output.
 
 Contrary to other TAP runners for Python, ``pycotap`` ...
 
@@ -29,6 +28,11 @@ Contrary to other TAP runners for Python, ``pycotap`` ...
   the tests are run.
 
 - ... only contains a TAP reporter, so no parsers, no frameworks, no dependencies, ...
+
+- ... is configurable: you can choose how you want the test output and test result
+  diagnostics to end up in your TAP output (as TAP diagnostics, YAML blocks, or 
+  attachments). The defaults are optimized for a `Jenkins <http://jenkins-ci.org>`_ based
+  flow.
 
 Documentation and examples can be found on `the pycotap page 
 <https://el-tramo.be/pycotap>`_.
