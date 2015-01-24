@@ -8,6 +8,7 @@
 
 import unittest
 import sys
+import base64
 if sys.hexversion >= 0x03000000:
   from io import StringIO
 else:
@@ -15,7 +16,7 @@ else:
 
 # Log modes
 class LogMode(object) :
-  LogToError, LogToDiagnostics, LogToYAML = range(3)
+  LogToError, LogToDiagnostics, LogToYAML, LogToAttachment = range(4)
 
 
 class TAPTestResult(unittest.TestResult):
@@ -49,7 +50,7 @@ class TAPTestResult(unittest.TestResult):
   def startTest(self, test):
     self.orig_stdout = sys.stdout
     self.orig_stderr = sys.stderr
-    if self.log_mode in [LogMode.LogToDiagnostics, LogMode.LogToYAML]:
+    if self.log_mode != LogMode.LogToError:
       sys.stdout = sys.stderr = self.output = StringIO()
     else:
       sys.stdout = sys.stderr = self.error_stream
@@ -59,13 +60,20 @@ class TAPTestResult(unittest.TestResult):
     super(TAPTestResult, self).stopTest(test)
     sys.stdout = self.orig_stdout
     sys.stderr = self.orig_stderr
-    if self.log_mode in [LogMode.LogToDiagnostics, LogMode.LogToYAML]:
+    if self.log_mode != LogMode.LogToError:
       output = self.output.getvalue()
       if len(output):
         if self.log_mode == LogMode.LogToYAML:
           self.print_raw("  ---\n")
           self.print_raw("    output: >\n")
           self.print_raw("      " + output.rstrip().replace("\n", "\n      ") + "\n")
+          self.print_raw("  ...\n")
+        elif self.log_mode == LogMode.LogToAttachment:
+          self.print_raw("  ---\n")
+          self.print_raw("    output:\n")
+          self.print_raw("      File-Name: output.txt\n")
+          self.print_raw("      File-Type: text/plain\n")
+          self.print_raw("      File-Content: " + base64.b64encode(output) + "\n")
           self.print_raw("  ...\n")
         else:
           self.print_raw("# " + output.rstrip().replace("\n", "\n# ") + "\n")
