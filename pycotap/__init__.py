@@ -65,7 +65,7 @@ class TAPTestResult(unittest.TestResult):
       if len(output):
         if self.log_mode == LogMode.LogToYAML:
           self.print_raw("  ---\n")
-          self.print_raw("    output: >\n")
+          self.print_raw("    output: |\n")
           self.print_raw("      " + output.rstrip().replace("\n", "\n      ") + "\n")
           self.print_raw("  ...\n")
         elif self.log_mode == LogMode.LogToAttachment:
