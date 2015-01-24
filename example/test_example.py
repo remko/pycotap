@@ -24,4 +24,4 @@ class MyTests(unittest.TestCase):
 
 if __name__ == '__main__':
   suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
-  TAPTestRunner(log_mode = LogMode.LogToDiagnostics).run(suite)
+  TAPTestRunner(message_log = LogMode.LogToYAML, test_output_log = LogMode.LogToDiagnostics).run(suite)

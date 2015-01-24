@@ -49,7 +49,7 @@ class TAPTestRunnerTest(unittest.TestCase):
       def test_skipped(self):
         self.assertEqual(1, 2)
 
-    self.run_test(Test)
+    self.run_test(Test, message_log = LogMode.LogToDiagnostics, test_output_log = LogMode.LogToDiagnostics)
     self.assertEqual(self.process_output(self.output_stream.getvalue()), (
       "TAP version 13\n"
       "not ok 1 __main__.Test.test_failing\n"
@@ -64,7 +64,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual("", self.error_stream.getvalue())
 
   def test_log_output_to_diagnostics(self):
-    self.run_test(TAPTestRunnerTest.OutputTest)
+    self.run_test(TAPTestRunnerTest.OutputTest, message_log = LogMode.LogToDiagnostics, test_output_log = LogMode.LogToDiagnostics)
     self.assertEqual(self.process_output(self.output_stream.getvalue()), (
       "TAP version 13\n"
       "not ok 1 __main__.OutputTest.test_failing\n"
@@ -82,7 +82,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual("", self.error_stream.getvalue())
 
   def test_log_output_to_yaml(self):
-    self.run_test(TAPTestRunnerTest.OutputTest, log_mode = LogMode.LogToYAML)
+    self.run_test(TAPTestRunnerTest.OutputTest, message_log = LogMode.LogToYAML, test_output_log = LogMode.LogToYAML)
     self.assertEqual(self.process_output(self.output_stream.getvalue()), (
       "TAP version 13\n"
       "not ok 1 __main__.OutputTest.test_failing\n"
@@ -106,7 +106,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual("", self.error_stream.getvalue())
 
   def test_log_output_to_error(self):
-    self.run_test(TAPTestRunnerTest.OutputTest, log_mode = LogMode.LogToError)
+    self.run_test(TAPTestRunnerTest.OutputTest, message_log = LogMode.LogToError, test_output_log = LogMode.LogToError)
     self.assertEqual(self.output_stream.getvalue(), (
       "TAP version 13\n"
       "not ok 1 __main__.OutputTest.test_failing\n"
@@ -127,7 +127,7 @@ class TAPTestRunnerTest(unittest.TestCase):
 
   def test_log_to_error_order(self):
     self.output_stream = self.error_stream
-    self.run_test(TAPTestRunnerTest.OutputTest, log_mode = LogMode.LogToError)
+    self.run_test(TAPTestRunnerTest.OutputTest, message_log = LogMode.LogToError, test_output_log = LogMode.LogToError)
     self.assertEqual(self.process_output(self.output_stream.getvalue()), (
       "TAP version 13\n"
       "Foo\n"
@@ -144,6 +144,29 @@ class TAPTestRunnerTest(unittest.TestCase):
       "1..2\n"
     ))
 
+  def test_different_error_and_test_output_log(self):
+    self.run_test(TAPTestRunnerTest.OutputTest, 
+        message_log = LogMode.LogToYAML, test_output_log = LogMode.LogToDiagnostics)
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
+      "TAP version 13\n"
+      "not ok 1 __main__.OutputTest.test_failing\n"
+      "# Foo\n"
+      "  ---\n"
+      "    message: |\n"  
+      "      Traceback (most recent call last):\n"  
+      "        File \"test.py\", line X, in test_failing\n"  
+      "          self.assertEqual(1, 2)\n"  
+      "      AssertionError: 1 != 2\n"  
+      "  ...\n"
+      "ok 2 __main__.OutputTest.test_passing\n"
+      "# Foo\n"
+      "# Baz\n"
+      "# Bar\n"
+      "1..2\n"
+    ))
+    self.assertEqual("", self.error_stream.getvalue())
+
 
 if __name__ == '__main__':
-  TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest))
+  unittest.main()
+  # TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest))

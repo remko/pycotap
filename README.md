@@ -15,6 +15,10 @@ Contrary to other TAP runners for Python, `pycotap` ...
   are printed as they come in, the consumers can directly display results while 
   the tests are run.
 - ... only contains a TAP reporter, so no parsers, no frameworks, no dependencies, ...
+- ... is configurable: you can choose how you want the test output and test result
+  diagnostics to end up in your TAP output (as TAP diagnostics, YAML blocks, or 
+  attachments). The defaults are optimized for a [Jenkins](http://jenkins-ci.org) based
+  flow.
 
 
 ## Installation
@@ -86,14 +90,26 @@ Alternatively, you can pipe the test to any TAP pretty printer, such as
 
 ## API
 
-### `TAPTestRunner([log_mode])`
+### `TAPTestRunner([message_log], [test_output_log])`
 
-- `log_mode` (Optional): What to do with output resulting from the tests. Possible values:
+- `message_log` (Optional; Default: `LogMode.LogToYAML`):  
+  What to do with test messages (e.g. assertion failure details). 
+  See `LogMode` for possible values.
+- `test_output_log` (Optional; Default: `LogMode.LogToDiagnostics`):  
+  What to do with output printed by the tests.
+  See `LogMode` for possible values.
 
-    - `LogMode.LogToError`: Log all output to standard error. This means no output 
-      information will end up in the TAP stream, and so will not be processed by any 
-      processors.
-    - `LogMode.LogToDiagnostics` (Default): Put all output in a diagnostics message 
-      after the test result. This means all output will end up in the TAP stream. How 
-      this is displayed depends on the processor.
-    - `LogMode.LogToYAML`: Log all output to a YAML block.
+
+### `LogMode`
+
+Enumeration of different destinations to log information. Possible values:
+
+- `LogMode.LogToError`: Log all output to standard error. This means no output 
+  information will end up in the TAP stream, and so will not be processed by any 
+  processors.
+- `LogMode.LogToDiagnostics` (Default): Put output in a diagnostics message 
+  after the test result. This means all output will end up in the TAP stream. How 
+  this is displayed depends on the processor.
+- `LogMode.LogToYAML`: Put output in a YAML block.
+- `LogMode.LogToAttachment`: Put output in a downloadable attachment in a YAML block. 
+  This is an extension supported by e.g. [`tap4j`](http://tap4j.org).
