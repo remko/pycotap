@@ -5,6 +5,10 @@ clean:
 	python setup.py clean
 	-rm -rf build dist *.egg-info
 
+.PHONY: check
+check:
+	python test/test.py
+
 .PHONY: dist
 dist:
 	python setup.py sdist

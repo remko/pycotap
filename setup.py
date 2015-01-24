@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
   name = "pycotap",
-  version = "0.1.0",
+  version = "1.0.0",
   packages = find_packages(),
 
   # Metadata
@@ -37,7 +37,7 @@ Documentation and examples can be found on `the pycotap page
   keywords = "tap unittest testing",
   url = "https://el-tramo.be/pycotap",
   classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Topic :: Utilities",
     "License :: OSI Approved :: MIT License",

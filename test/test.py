@@ -168,5 +168,5 @@ class TAPTestRunnerTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-  unittest.main()
-  # TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest))
+  # unittest.main()
+  TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest))
