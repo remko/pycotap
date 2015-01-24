@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 
+# pylint: disable=C0325
+
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import unittest
-import StringIO
 import re
+if sys.hexversion >= 0x03000000:
+  from io import StringIO
+else:
+  from StringIO import StringIO
 
 from pycotap import TAPTestRunner, LogMode
 
 class TAPTestRunnerTest(unittest.TestCase):
   def setUp(self):
-    self.output_stream = StringIO.StringIO()
-    self.error_stream = StringIO.StringIO()
+    self.output_stream = StringIO()
+    self.error_stream = StringIO()
 
   def run_test(self, test_class, **kwargs):
     suite = unittest.TestLoader().loadTestsFromTestCase(test_class)
@@ -25,7 +30,7 @@ class TAPTestRunnerTest(unittest.TestCase):
         re.sub(r"line \d+", "line X", output))
 
   def test_all_test_outcomes(self):
-    class Test(unittest.TestCase) :
+    class Test(unittest.TestCase):
       def test_passing(self):
         self.assertEqual(1, 1)
       def test_failing(self):
@@ -49,15 +54,15 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual("", self.error_stream.getvalue())
 
   def test_log_output_to_diagnostics(self):
-    class Test(unittest.TestCase) :
+    class Test(unittest.TestCase):
       def test_failing(self):
-        print "Foo"
+        print("Foo")
         self.assertEqual(1, 2)
-        print "Bar"
+        print("Bar")
       def test_passing(self):
-        print "Foo"
+        print("Foo")
         sys.stderr.write("Baz\n")
-        print "Bar"
+        print("Bar")
 
     self.run_test(Test)
     self.assertEqual(self.process_output(self.output_stream.getvalue()), (
@@ -77,15 +82,15 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual("", self.error_stream.getvalue())
 
   def test_log_output_to_error(self):
-    class Test(unittest.TestCase) :
+    class Test(unittest.TestCase):
       def test_failing(self):
-        print "Foo"
+        print("Foo")
         self.assertEqual(1, 2)
-        print "Bar"
+        print("Bar")
       def test_passing(self):
-        print "Foo"
+        print("Foo")
         sys.stderr.write("Baz\n")
-        print "Bar"
+        print("Bar")
 
     self.run_test(Test, log_mode = LogMode.LogToError)
     self.assertEqual(self.output_stream.getvalue(), (
@@ -107,15 +112,15 @@ class TAPTestRunnerTest(unittest.TestCase):
     ))
 
   def test_log_to_error_order(self):
-    class Test(unittest.TestCase) :
+    class Test(unittest.TestCase):
       def test_failing(self):
-        print "Foo"
+        print("Foo")
         self.assertEqual(1, 2)
-        print "Bar"
+        print("Bar")
       def test_passing(self):
-        print "Foo"
+        print("Foo")
         sys.stderr.write("Baz\n")
-        print "Bar"
+        print("Bar")
 
     self.output_stream = self.error_stream
     self.run_test(Test, log_mode = LogMode.LogToError)

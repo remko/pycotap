@@ -8,7 +8,10 @@
 
 import unittest
 import sys
-import StringIO
+if sys.hexversion >= 0x03000000:
+  from io import StringIO
+else:
+  from StringIO import StringIO
 
 # Log modes
 class LogMode(object) :
@@ -47,7 +50,7 @@ class TAPTestResult(unittest.TestResult):
     self.orig_stdout = sys.stdout
     self.orig_stderr = sys.stderr
     if self.log_mode == LogMode.LogToDiagnostics:
-      sys.stdout = sys.stderr = self.output = StringIO.StringIO()
+      sys.stdout = sys.stderr = self.output = StringIO()
     else:
       sys.stdout = sys.stderr = self.error_stream
     super(TAPTestResult, self).startTest(test)
