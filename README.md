@@ -107,7 +107,7 @@ Enumeration of different destinations to log information. Possible values:
 - `LogMode.LogToError`: Log all output to standard error. This means no output 
   information will end up in the TAP stream, and so will not be processed by any 
   processors.
-- `LogMode.LogToDiagnostics` (Default): Put output in a diagnostics message 
+- `LogMode.LogToDiagnostics`: Put output in a diagnostics message 
   after the test result. This means all output will end up in the TAP stream. How 
   this is displayed depends on the processor.
 - `LogMode.LogToYAML`: Put output in a YAML block.
