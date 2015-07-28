@@ -31,6 +31,32 @@ class TAPTestResult(unittest.TestResult):
     self.message_log = message_log
     self.test_output_log = test_output_log
     self.output_stream.write("TAP version 13\n")
+    self._set_streams()
+
+  def printErrors(self):
+    self.print_raw("1..%d\n" % self.testsRun)
+    self._reset_streams()
+
+  def _set_streams(self):
+    self.orig_stdout = sys.stdout
+    self.orig_stderr = sys.stderr
+    if self.message_log == LogMode.LogToError:
+      self.message = self.error_stream
+    else:
+      self.message = StringIO()
+    if self.test_output_log == LogMode.LogToError:
+      self.test_output = self.error_stream
+    else:
+      self.test_output = StringIO()
+
+    if self.message_log == self.test_output_log:
+      self.test_output = self.message
+    sys.stdout = sys.stderr = self.test_output
+
+  def _reset_streams(self):
+    sys.stdout = self.orig_stdout
+    sys.stderr = self.orig_stderr
+
 
   def print_raw(self, text):
     self.output_stream.write(text)
@@ -50,27 +76,10 @@ class TAPTestResult(unittest.TestResult):
     self.print_result("not ok", test)
 
   def startTest(self, test):
-    self.orig_stdout = sys.stdout
-    self.orig_stderr = sys.stderr
-    if self.message_log == LogMode.LogToError:
-      self.message = self.error_stream
-    else:
-      self.message = StringIO()
-    if self.test_output_log == LogMode.LogToError:
-      self.test_output = self.error_stream
-    else:
-      self.test_output = StringIO()
-
-    if self.message_log == self.test_output_log:
-      self.test_output = self.message
-
-    sys.stdout = sys.stderr = self.test_output
     super(TAPTestResult, self).startTest(test)
 
   def stopTest(self, test):
     super(TAPTestResult, self).stopTest(test)
-    sys.stdout = self.orig_stdout
-    sys.stderr = self.orig_stderr
     if self.message_log == self.test_output_log:
       logs = [(self.message_log, self.message, "output")]
     else:
@@ -96,6 +105,7 @@ class TAPTestResult(unittest.TestResult):
             self.print_raw("  ...\n")
           else:
             self.print_raw("# " + output.rstrip().replace("\n", "\n# ") + "\n")
+        log.truncate(0)
 
   def addSuccess(self, test):
     super(TAPTestResult, self).addSuccess(test)
@@ -123,9 +133,6 @@ class TAPTestResult(unittest.TestResult):
   def addUnexpectedSuccess(self, test):
     super(TAPTestResult, self).addUnexpectedSuccess(self, test)
     self.not_ok(test)
-
-  def printErrors(self):
-    self.print_raw("1..%d\n" % self.testsRun)
 
 
 class TAPTestRunner(object):

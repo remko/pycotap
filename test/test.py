@@ -14,6 +14,8 @@ else:
 
 from pycotap import TAPTestRunner, LogMode
 
+cached_stream = None
+
 class TAPTestRunnerTest(unittest.TestCase):
   class OutputTest(unittest.TestCase):
     def test_failing(self):
@@ -24,6 +26,16 @@ class TAPTestRunnerTest(unittest.TestCase):
       print("Foo")
       sys.stderr.write("Baz\n")
       print("Bar")
+
+  class CachingTest(unittest.TestCase):
+    def test_passing_1(self):
+      global cached_stream
+      cached_stream = cached_stream or sys.stdout
+      cached_stream.write("Baz1\n")
+    def test_passing_2(TAPTestRunnerTest):
+      global cached_stream
+      cached_stream = cached_stream or sys.stdout
+      cached_stream.write("Baz2\n")
 
   def setUp(self):
     self.output_stream = StringIO()
@@ -166,6 +178,19 @@ class TAPTestRunnerTest(unittest.TestCase):
     ))
     self.assertEqual("", self.error_stream.getvalue())
 
+  def test_stream_caching(self):
+    self.run_test(TAPTestRunnerTest.CachingTest, 
+        message_log = LogMode.LogToDiagnostics, 
+        test_output_log = LogMode.LogToDiagnostics)
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
+      "TAP version 13\n"
+      "ok 1 __main__.CachingTest.test_passing_1\n"
+      "# Baz1\n"
+      "ok 2 __main__.CachingTest.test_passing_2\n"
+      "# Baz2\n"
+      "1..2\n"
+    ))
+    self.assertEqual("", self.error_stream.getvalue())
 
 if __name__ == '__main__':
   # unittest.main()
