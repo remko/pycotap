@@ -45,8 +45,9 @@ your project somewhere.
 Create a test suite, and pass it to a `TAPTestRunner`.
 For example:
 
+    #!python
+
     import unittest
-    from pycotap import TAPTestRunner
 
     class MyTests(unittest.TestCase):
       def test_that_it_passes(self):
@@ -60,6 +61,7 @@ For example:
         self.assertEqual(1, 0)
 
     if __name__ == '__main__':
+      from pycotap import TAPTestRunner
       suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
       TAPTestRunner().run(suite)
 
