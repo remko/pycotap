@@ -7,7 +7,13 @@ clean:
 
 .PHONY: check
 check:
+ifeq ($(COVERAGE),1)
+	coverage run --omit='**/test/*' test/test.py
+	coverage html --directory=coverage
+else
 	python test/test.py
+endif
+	
 
 .PHONY: dist
 dist:

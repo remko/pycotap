@@ -4,4 +4,6 @@ python:
 - "3.2"
 - "3.3"
 - "3.4"
-script: make check
+install: pip install coveralls
+script: make COVERAGE=1 check
+after_success: coveralls
