@@ -21,6 +21,11 @@ Contrary to other TAP runners for Python, `pycotap` ...
   flow.
 
 
+> Nice work with pycotap! I took a "kitchen sink" approach with tappy so I'm
+> glad someone made a no dependency TAP unittest runner. :)
+>   -- [Matt Layman](http://www.mattlayman.com), author of [tappy](http://tappy.readthedocs.org/en/latest/)
+
+
 ## Installation
 
 You can install the package directly from [PIP](https://pypi.python.org):
