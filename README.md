@@ -118,3 +118,23 @@ Enumeration of different destinations to log information. Possible values:
 - `LogMode.LogToYAML`: Put output in a YAML block.
 - `LogMode.LogToAttachment`: Put output in a downloadable attachment in a YAML block. 
   This is an extension supported by e.g. [`tap4j`](http://tap4j.org).
+
+
+## Changelog
+
+### 1.1.0 (2015-07-29)
+
+- Don't print message for expected failures
+- Fix problem with unexpected success
+
+### 1.0.1 (2015-07-28)
+
+- Fix problem with tests that cache `sys.std*` output streams
+
+### 1.0.0 (2015-01-24)
+
+- Initial stable version
+
+### 0.1.0 (2015-01-21)
+
+- Initial version

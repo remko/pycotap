@@ -75,6 +75,52 @@ class TAPTestRunnerTest(unittest.TestCase):
     ))
     self.assertEqual("", self.error_stream.getvalue())
 
+  def test_error(self):
+    class Test(unittest.TestCase):
+      def test_error(self):
+        raise Exception("Some error happened")
+
+    self.run_test(Test, message_log = LogMode.LogToDiagnostics, test_output_log = LogMode.LogToDiagnostics)
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
+      "TAP version 13\n"
+      "not ok 1 __main__.Test.test_error\n"
+      "# Traceback (most recent call last):\n"
+      "#   File \"test.py\", line X, in test_error\n"
+      "#     raise Exception(\"Some error happened\")\n"
+      "# Exception: Some error happened\n"
+      "1..1\n"
+    ))
+    self.assertEqual("", self.error_stream.getvalue())
+
+  def test_expected_error(self):
+    class Test(unittest.TestCase):
+      @unittest.expectedFailure
+      def test_expected_error(self):
+        self.assertEqual(1, 2)
+
+    self.run_test(Test, message_log = LogMode.LogToDiagnostics, test_output_log = LogMode.LogToDiagnostics)
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
+      "TAP version 13\n"
+      "ok 1 __main__.Test.test_expected_error\n"
+      "1..1\n"
+    ))
+    self.assertEqual("", self.error_stream.getvalue())
+
+  def test_unexpected_success(self):
+    class Test(unittest.TestCase):
+      @unittest.expectedFailure
+      def test_unexpected_success(self):
+        self.assertEqual(1, 1)
+
+    self.run_test(Test, message_log = LogMode.LogToDiagnostics, test_output_log = LogMode.LogToDiagnostics)
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
+      "TAP version 13\n"
+      "not ok 1 __main__.Test.test_unexpected_success\n"
+      "# Unexpected success\n"
+      "1..1\n"
+    ))
+    self.assertEqual("", self.error_stream.getvalue())
+
   def test_log_output_to_diagnostics(self):
     self.run_test(TAPTestRunnerTest.OutputTest, message_log = LogMode.LogToDiagnostics, test_output_log = LogMode.LogToDiagnostics)
     self.assertEqual(self.process_output(self.output_stream.getvalue()), (
@@ -112,6 +158,28 @@ class TAPTestRunnerTest(unittest.TestCase):
       "      Foo\n"
       "      Baz\n"
       "      Bar\n"
+      "  ...\n"
+      "1..2\n"
+    ))
+    self.assertEqual("", self.error_stream.getvalue())
+
+  def test_log_output_to_attachment(self):
+    self.run_test(TAPTestRunnerTest.OutputTest, message_log = LogMode.LogToAttachment, test_output_log = LogMode.LogToAttachment)
+    self.assertEqual(self.process_output(self.output_stream.getvalue()), (
+      "TAP version 13\n"
+      "not ok 1 __main__.OutputTest.test_failing\n"
+      "  ---\n"
+      "    output:\n"  
+      "      File-Name: output.txt\n"
+      "      File-Type: text/plain\n"
+      "      File-Content: Rm9vClRyYWNlYmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KToKICBGaWxlICJ0ZXN0L3Rlc3QucHkiLCBsaW5lIDIzLCBpbiB0ZXN0X2ZhaWxpbmcKICAgIHNlbGYuYXNzZXJ0RXF1YWwoMSwgMikKQXNzZXJ0aW9uRXJyb3I6IDEgIT0gMgoK\n"
+      "  ...\n"
+      "ok 2 __main__.OutputTest.test_passing\n"
+      "  ---\n"
+      "    output:\n"  
+      "      File-Name: output.txt\n"
+      "      File-Type: text/plain\n"
+      "      File-Content: Rm9vCkJhegpCYXIK\n"
       "  ...\n"
       "1..2\n"
     ))
@@ -193,5 +261,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual("", self.error_stream.getvalue())
 
 if __name__ == '__main__':
-  # unittest.main()
-  TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest))
+  if os.environ.get("NO_PYCOTAP"):
+    unittest.main()
+  else:
+    TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest))

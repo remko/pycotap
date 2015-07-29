@@ -127,11 +127,11 @@ class TAPTestResult(unittest.TestResult):
 
   def addExpectedFailure(self, test, err):
     super(TAPTestResult, self).addExpectedFailure(test, err)
-    self.message.write(self.expectedFailures[-1][1] + "\n")
     self.ok(test)
 
   def addUnexpectedSuccess(self, test):
-    super(TAPTestResult, self).addUnexpectedSuccess(self, test)
+    super(TAPTestResult, self).addUnexpectedSuccess(test)
+    self.message.write("Unexpected success" + "\n")
     self.not_ok(test)
 
 
