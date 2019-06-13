@@ -45,25 +45,25 @@ your project somewhere.
 Create a test suite, and pass it to a `TAPTestRunner`.
 For example:
 
-    #!python
+```python
+import unittest
 
-    import unittest
+class MyTests(unittest.TestCase):
+  def test_that_it_passes(self):
+    self.assertEqual(0, 0)
 
-    class MyTests(unittest.TestCase):
-      def test_that_it_passes(self):
-        self.assertEqual(0, 0)
+  @unittest.skip("not finished yet")
+  def test_that_it_skips(self): 
+    raise Exception("Does not happen")
 
-      @unittest.skip("not finished yet")
-      def test_that_it_skips(self): 
-        raise Exception("Does not happen")
+  def test_that_it_fails(self):
+    self.assertEqual(1, 0)
 
-      def test_that_it_fails(self):
-        self.assertEqual(1, 0)
-
-    if __name__ == '__main__':
-      from pycotap import TAPTestRunner
-      suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
-      TAPTestRunner().run(suite)
+if __name__ == '__main__':
+  from pycotap import TAPTestRunner
+  suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
+  TAPTestRunner().run(suite)
+```
 
 Running the test prints the TAP results to standard output:
 
