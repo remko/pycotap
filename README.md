@@ -42,8 +42,9 @@ your project somewhere.
 
 ## Usage
 
-Create a test suite, and pass it to a `TAPTestRunner`.
-For example:
+Create a test suite, and run it with `-mpycotap` flag.
+
+For example, given the following test suite in `test_example.py`:
 
 ```python
 import unittest
@@ -58,33 +59,28 @@ class MyTests(unittest.TestCase):
 
   def test_that_it_fails(self):
     self.assertEqual(1, 0)
-
-if __name__ == '__main__':
-  from pycotap import TAPTestRunner
-  suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
-  TAPTestRunner().run(suite)
 ```
 
 Running the test prints the TAP results to standard output:
 
-    $ python ./test_example.py 
+    $ python -mpycotap test_example
     not ok 1 __main__.MyTests.test_that_it_fails
     ok 2 __main__.MyTests.test_that_it_passes
     ok 3 __main__.MyTests.test_that_it_skips # Skipped: not finished yet
     1..3
-    
+
 Alternatively, you can pipe the test to any TAP pretty printer, such as
 [faucet](https://github.com/substack/faucet) or 
 [tap-dot](https://github.com/scottcorgan/tap-dot):
 
-    $ python ./test_example.py  | faucet
+    $ python -mpycotap test_example  | faucet
     ⨯ __main__.MyTests.test_that_it_fails
     ✓ __main__.MyTests.test_that_it_passes
     ✓ __main__.MyTests.test_that_it_skips # Skipped: not finished yet
     ⨯ fail  1
 
 
-    $ python ./test_example.py  | tap-dot 
+    $ python -mpycotap test_example  | tap-dot 
     x  ..  
 
       3 tests
@@ -94,6 +90,29 @@ Alternatively, you can pipe the test to any TAP pretty printer, such as
       Failed Tests:   There was 1 failure
         x __main__.MyTests.test_that_it_fails
 
+
+### Bring your own `__main__`
+
+You can create a `TAPTestRunner` yourself (e.g. to pass custom parameters),
+and use it to drive your own main function.
+
+For example, the following can be added to the test example suite above to create
+a runnable Python script:
+
+```python
+if __name__ == '__main__':
+  from pycotap import TAPTestRunner
+  suite = unittest.TestLoader().loadTestsFromTestCase(MyTests)
+  TAPTestRunner().run(suite)
+```
+
+This script can now be run:
+
+    $ python ./test_example.py 
+    not ok 1 __main__.MyTests.test_that_it_fails
+    ok 2 __main__.MyTests.test_that_it_passes
+    ok 3 __main__.MyTests.test_that_it_skips # Skipped: not finished yet
+    1..3
 
 ## API
 
