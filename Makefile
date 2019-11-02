@@ -17,11 +17,14 @@ endif
 
 .PHONY: dist
 dist:
-	python setup.py sdist
+	python3 setup.py sdist
 
 .PHONY: upload
 upload:
-	python setup.py register
-	python setup.py sdist upload
-	# python setup.py bdist_egg upload
-	# python setup.py bdist_wininst upload
+	python3 setup.py sdist bdist_wheel
+	twine upload dist/*
+
+.PHONY: test-upload
+test-upload:
+	python3 setup.py sdist bdist_wheel
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
