@@ -20,7 +20,7 @@ dist:
 	python3 setup.py sdist
 
 .PHONY: upload
-upload:
+upload: clean
 	python3 setup.py sdist bdist_wheel
 	twine upload dist/*
 
