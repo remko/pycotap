@@ -48,4 +48,5 @@ Documentation and examples can be found on `the pycotap page
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Testing"
   ],
+  data_files = [("", ["COPYING"])]
 )
