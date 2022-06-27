@@ -104,6 +104,8 @@ class TAPTestResult(unittest.TestResult):
             self.print_raw("      File-Content: " + base64.b64encode(output) + "\n")
             self.print_raw("  ...\n")
           else:
+            # FIXME: As reported in  #9, sometimes \0 is printed in the output. 
+            # Need to investigate why this happens. As a temporary workaround, filter out the NULL bytes.
             self.print_raw("# " + output.rstrip().replace("\n", "\n# ").replace("\0", "") + "\n")
         log.truncate(0)
 
