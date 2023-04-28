@@ -147,6 +147,11 @@ values:
 
 ## Changelog
 
+### 1.3.0 (2023-04-28)
+
+  - Fix problem with garbage output (thanks
+    [wjt](https://github.com/wjt))
+
 ### 1.1.0 (2015-07-29)
 
   - Don't print message for expected failures
