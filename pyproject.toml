@@ -21,3 +21,16 @@ exclude = [
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.yapf]
+based_on_style = "pep8"
+column_limit = 100
+indent_width = 2
+continuation_indent_width = 2
+continuation_align_style = "valign-right"
+i18n_function_call = ["_", "N_"]
+indent_dictionary_value = true
+split_before_closing_bracket = false
+spaces_around_default_or_named_assign = true
+dedent_closing_brackets = true
+blank_line_before_nested_class_or_def = false
