@@ -53,7 +53,10 @@ class TAPTestRunnerTest(unittest.TestCase):
     ).run(suite)
 
   def process_output(self, output):
-    return re.sub(r"File \".*\"", "File \"test.py\"", re.sub(r"line \d+", "line X", output))
+    return re.sub(
+      r"Rm9vClRy.*", "Rm9vClRy...",
+      re.sub(r"File \".*\"", "File \"test.py\"", re.sub(r"line \d+", "line X", output))
+    )
 
   def test_all_test_outcomes(self):
     class Test(unittest.TestCase):
@@ -73,13 +76,13 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "not ok 1 __main__.Test.test_failing\n"
+        "not ok 1 __main__.TAPTestRunnerTest.test_all_test_outcomes.<locals>.Test.test_failing\n"
         "# Traceback (most recent call last):\n"
         "#   File \"test.py\", line X, in test_failing\n"
         "#     self.assertEqual(1, 2)\n"
         "# AssertionError: 1 != 2\n"
-        "ok 2 __main__.Test.test_passing\n"
-        "ok 3 __main__.Test.test_skipped # SKIP Not finished yet\n"
+        "ok 2 __main__.TAPTestRunnerTest.test_all_test_outcomes.<locals>.Test.test_passing\n"
+        "ok 3 __main__.TAPTestRunnerTest.test_all_test_outcomes.<locals>.Test.test_skipped # SKIP Not finished yet\n"
         "1..3\n"
       )
     )
@@ -96,7 +99,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "not ok 1 __main__.Test.test_error\n"
+        "not ok 1 __main__.TAPTestRunnerTest.test_error.<locals>.Test.test_error\n"
         "# Traceback (most recent call last):\n"
         "#   File \"test.py\", line X, in test_error\n"
         "#     raise Exception(\"Some error happened\")\n"
@@ -116,10 +119,11 @@ class TAPTestRunnerTest(unittest.TestCase):
       Test, message_log = LogMode.LogToDiagnostics, test_output_log = LogMode.LogToDiagnostics
     )
     self.assertEqual(
-      self.process_output(self.output_stream.getvalue()),
-      ("TAP version 13\n"
-        "ok 1 __main__.Test.test_expected_error\n"
-        "1..1\n")
+      self.process_output(self.output_stream.getvalue()), (
+        "TAP version 13\n"
+        "ok 1 __main__.TAPTestRunnerTest.test_expected_error.<locals>.Test.test_expected_error\n"
+        "1..1\n"
+      )
     )
     self.assertEqual("", self.error_stream.getvalue())
 
@@ -135,7 +139,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "not ok 1 __main__.Test.test_unexpected_success\n"
+        "not ok 1 __main__.TAPTestRunnerTest.test_unexpected_success.<locals>.Test.test_unexpected_success\n"
         "# Unexpected success\n"
         "1..1\n"
       )
@@ -151,13 +155,13 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "not ok 1 __main__.OutputTest.test_failing\n"
+        "not ok 1 __main__.TAPTestRunnerTest.OutputTest.test_failing\n"
         "# Foo\n"
         "# Traceback (most recent call last):\n"
         "#   File \"test.py\", line X, in test_failing\n"
         "#     self.assertEqual(1, 2)\n"
         "# AssertionError: 1 != 2\n"
-        "ok 2 __main__.OutputTest.test_passing\n"
+        "ok 2 __main__.TAPTestRunnerTest.OutputTest.test_passing\n"
         "# Foo\n"
         "# Baz\n"
         "# Bar\n"
@@ -175,7 +179,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "not ok 1 __main__.OutputTest.test_failing\n"
+        "not ok 1 __main__.TAPTestRunnerTest.OutputTest.test_failing\n"
         "  ---\n"
         "    output: |\n"
         "      Foo\n"
@@ -184,7 +188,7 @@ class TAPTestRunnerTest(unittest.TestCase):
         "          self.assertEqual(1, 2)\n"
         "      AssertionError: 1 != 2\n"
         "  ...\n"
-        "ok 2 __main__.OutputTest.test_passing\n"
+        "ok 2 __main__.TAPTestRunnerTest.OutputTest.test_passing\n"
         "  ---\n"
         "    output: |\n"
         "      Foo\n"
@@ -202,17 +206,18 @@ class TAPTestRunnerTest(unittest.TestCase):
       message_log = LogMode.LogToAttachment,
       test_output_log = LogMode.LogToAttachment
     )
+    self.maxDiff = None
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "not ok 1 __main__.OutputTest.test_failing\n"
+        "not ok 1 __main__.TAPTestRunnerTest.OutputTest.test_failing\n"
         "  ---\n"
         "    output:\n"
         "      File-Name: output.txt\n"
         "      File-Type: text/plain\n"
-        "      File-Content: Rm9vClRyYWNlYmFjayAobW9zdCByZWNlbnQgY2FsbCBsYXN0KToKICBGaWxlICJ0ZXN0L3Rlc3QucHkiLCBsaW5lIDIzLCBpbiB0ZXN0X2ZhaWxpbmcKICAgIHNlbGYuYXNzZXJ0RXF1YWwoMSwgMikKQXNzZXJ0aW9uRXJyb3I6IDEgIT0gMgoK\n"
+        "      File-Content: Rm9vClRy...\n"
         "  ...\n"
-        "ok 2 __main__.OutputTest.test_passing\n"
+        "ok 2 __main__.TAPTestRunnerTest.OutputTest.test_passing\n"
         "  ---\n"
         "    output:\n"
         "      File-Name: output.txt\n"
@@ -233,8 +238,8 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.output_stream.getvalue(), (
         "TAP version 13\n"
-        "not ok 1 __main__.OutputTest.test_failing\n"
-        "ok 2 __main__.OutputTest.test_passing\n"
+        "not ok 1 __main__.TAPTestRunnerTest.OutputTest.test_failing\n"
+        "ok 2 __main__.TAPTestRunnerTest.OutputTest.test_passing\n"
         "1..2\n"
       )
     )
@@ -268,11 +273,11 @@ class TAPTestRunnerTest(unittest.TestCase):
         "    self.assertEqual(1, 2)\n"
         "AssertionError: 1 != 2\n"
         "\n"
-        "not ok 1 __main__.OutputTest.test_failing\n"
+        "not ok 1 __main__.TAPTestRunnerTest.OutputTest.test_failing\n"
         "Foo\n"
         "Baz\n"
         "Bar\n"
-        "ok 2 __main__.OutputTest.test_passing\n"
+        "ok 2 __main__.TAPTestRunnerTest.OutputTest.test_passing\n"
         "1..2\n"
       )
     )
@@ -286,7 +291,7 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "not ok 1 __main__.OutputTest.test_failing\n"
+        "not ok 1 __main__.TAPTestRunnerTest.OutputTest.test_failing\n"
         "# Foo\n"
         "  ---\n"
         "    message: |\n"
@@ -295,7 +300,7 @@ class TAPTestRunnerTest(unittest.TestCase):
         "          self.assertEqual(1, 2)\n"
         "      AssertionError: 1 != 2\n"
         "  ...\n"
-        "ok 2 __main__.OutputTest.test_passing\n"
+        "ok 2 __main__.TAPTestRunnerTest.OutputTest.test_passing\n"
         "# Foo\n"
         "# Baz\n"
         "# Bar\n"
@@ -313,9 +318,9 @@ class TAPTestRunnerTest(unittest.TestCase):
     self.assertEqual(
       self.process_output(self.output_stream.getvalue()), (
         "TAP version 13\n"
-        "ok 1 __main__.CachingTest.test_passing_1\n"
+        "ok 1 __main__.TAPTestRunnerTest.CachingTest.test_passing_1\n"
         "# Baz1\n"
-        "ok 2 __main__.CachingTest.test_passing_2\n"
+        "ok 2 __main__.TAPTestRunnerTest.CachingTest.test_passing_2\n"
         "# Baz2\n"
         "1..2\n"
       )

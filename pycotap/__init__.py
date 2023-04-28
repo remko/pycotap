@@ -97,11 +97,12 @@ class TAPTestResult(unittest.TestResult):
             self.print_raw("      " + output.rstrip().replace("\n", "\n      ") + "\n")
             self.print_raw("  ...\n")
           elif log_mode == LogMode.LogToAttachment:
+            content = base64.b64encode(output.encode("utf-8")).decode("utf-8")
             self.print_raw("  ---\n")
             self.print_raw("    " + log_name + ":\n")
             self.print_raw("      File-Name: " + log_name + ".txt\n")
             self.print_raw("      File-Type: text/plain\n")
-            self.print_raw("      File-Content: " + base64.b64encode(output) + "\n")
+            self.print_raw("      File-Content: " + content + "\n")
             self.print_raw("  ...\n")
           else:
             self.print_raw("# " + output.rstrip().replace("\n", "\n# ") + "\n")
