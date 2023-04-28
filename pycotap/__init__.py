@@ -112,8 +112,8 @@ class TAPTestResult(unittest.TestResult):
                         self.print_raw("# " +
                                        output.rstrip().replace("\n", "\n# ") +
                                        "\n")
-                log.truncate(0)
                 log.seek(0)
+                log.truncate(0)
 
     def addSuccess(self, test):
         super(TAPTestResult, self).addSuccess(test)
