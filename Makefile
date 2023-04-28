@@ -14,6 +14,9 @@ else
 	python test/test.py
 endif
 	
+.PHONY: lint
+lint:
+	ruff .
 
 .PHONY: dist
 dist:
