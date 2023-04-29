@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# pylint: disable=C0325,E402,E501
+#!/usr/bin/env python3
 
 import os
 import re

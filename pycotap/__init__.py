@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 # Copyright (c) 2015 Remko Tronçon (https://el-tramo.be)
 # Released under the MIT license
@@ -12,7 +11,7 @@ import unittest
 if sys.hexversion >= 0x03000000:
   from io import StringIO
 else:
-  from StringIO import StringIO
+  from StringIO import StringIO  # pylint: disable=import-error
 
 
 # Log modes
@@ -75,8 +74,8 @@ class TAPTestResult(unittest.TestResult):
   def not_ok(self, test):
     self.print_result("not ok", test)
 
-  def startTest(self, test):
-    super(TAPTestResult, self).startTest(test)
+  # def startTest(self, test):
+  #   super(TAPTestResult, self).startTest(test)
 
   def stopTest(self, test):
     super(TAPTestResult, self).stopTest(test)

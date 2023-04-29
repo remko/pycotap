@@ -2,6 +2,7 @@ name: Build
 
 on:
   push:
+    branches: ['*', '!master']
   pull_request:
   workflow_dispatch:
   workflow_call:
@@ -22,6 +23,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff
-      - run: make check
+          pip install -r requirements.dev.txt
+      - run: make test COVERAGE=1
       - run: make lint
+
+      # Build & upload site artifacts
+      # Deploy happens in the `build-main` workflow, which only runs on main
+      - run: |
+          mkdir -p site/ci
+          mv coverage site/ci
+        shell: bash
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: site
+        if: matrix.python-version == '3.11'
