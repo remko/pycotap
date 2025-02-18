@@ -19,7 +19,7 @@ endif
 	
 .PHONY: lint
 lint:
-	ruff .
+	ruff check
 	pylint pycotap scripts
 
 .PHONY: dist
