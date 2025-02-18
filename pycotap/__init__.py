@@ -22,6 +22,7 @@ class LogMode(object):
 class TAPTestResult(unittest.TestResult):
   def __init__(self, output_stream, error_stream, message_log, test_output_log):
     super(TAPTestResult, self).__init__(self, output_stream)
+    self.have_fail = False
     self.output_stream = output_stream
     self.error_stream = error_stream
     self.orig_stdout = None
@@ -72,6 +73,7 @@ class TAPTestResult(unittest.TestResult):
     self.print_result("ok", test, directive)
 
   def not_ok(self, test):
+    self.have_fail = True
     self.print_result("not ok", test)
 
   # def startTest(self, test):
@@ -156,4 +158,4 @@ class TAPTestRunner(object):
     test(result)
     result.printErrors()
 
-    return result
+    return not result.have_fail

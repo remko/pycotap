@@ -330,4 +330,5 @@ if __name__ == '__main__':
   if os.environ.get("NO_PYCOTAP"):
     unittest.main()
   else:
-    TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest))
+    if not TAPTestRunner().run(unittest.TestLoader().loadTestsFromTestCase(TAPTestRunnerTest)):
+      sys.exit(1)
