@@ -1,6 +1,6 @@
 # pycotap: Tiny Python TAP Test Runner
 
-[![Build](https://github.com/remko/pycotap/actions/workflows/build.yml/badge.svg)](https://github.com/remko/pycotap/actions/workflows/build.yml)
+[![Build](https://github.com/remko/pycotap/actions/workflows/build-master.yml/badge.svg)](https://github.com/remko/pycotap/actions/workflows/build-master.yml)
 [![Coverage](https://remko.github.io/pycotap/ci/coverage/coverage.svg)](https://remko.github.io/pycotap/ci/coverage)
 [![PyPI
 version](https://badge.fury.io/py/pycotap.svg)](https://badge.fury.io/py/pycotap)
